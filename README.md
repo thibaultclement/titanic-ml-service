@@ -1,10 +1,11 @@
 # Projet Titanic-ML-Service
 
 Ce dépôt contient les scripts et modèles pour la restructuration d’un cas Kaggle classique en pipeline ML complet, versionné, testable, explicable et exposé via API.
-Cela concerne la problématique des survivants du Titanic. C’est un « problème jouet » mais il est traité comme un vrai mini produit ML.
+Cela concerne la problématique des survivants du Titanic. C’est un « problème jouet » mais il est traité comme un vrai mini produit ML.
 
 ## Structure du repository
 
+```
 titanic-ml-service/
 │
 ├── README.md
@@ -60,7 +61,7 @@ titanic-ml-service/
 │
 └── docker/
     └── Dockerfile
-
+```
 
 ## Structure de la présentation (cf. portfolio web)
 
