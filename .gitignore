@@ -1,0 +1,21 @@
+# Environnements et caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Outils et OS
+.uv/
+.vscode/
+.DS_Store
+
+# Secrets
+.env
+!.env.example
+
+# Données lourdes (conserver uniquement les échantillons)
+*.parquet
+*.duckdb
+*.db
+data/**/*
+!data/samples/**

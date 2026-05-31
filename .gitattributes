@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Binaires
+*.parquet binary
+*.duckdb  binary
+*.png     binary
+*.pdf     binary
