@@ -1,7 +1,16 @@
-# Projet Titanic-ML-Service
+# Titanic ML Service
 
-Ce dépôt contient les scripts et modèles pour la restructuration d’un cas Kaggle classique en pipeline ML complet, versionné, testable, explicable et exposé via API.
-Cela concerne la problématique des survivants du Titanic. C’est un « problème jouet » mais il est traité comme un vrai mini produit ML.
+Ce projet transforme le célèbre challenge Kaggle Titanic en un service de machine learning complet.
+
+L'objectif est de démontrer une démarche professionnelle de data science et de ML engineering, avec le meilleur score possible.
+
+- exploration et validation des données ;
+- feature engineering ;
+- entraînement et comparaison de modèles ;
+- explicabilité des prédictions ;
+- exposition du modèle via une API FastAPI ;
+- structuration du projet selon les bonnes pratiques de développement.
+
 
 ## Structure du repository
 
@@ -63,6 +72,28 @@ titanic-ml-service/
     └── Dockerfile
 ```
 
+
+## Architecture du projet
+
+Le pipeline est organisé selon les étapes suivantes :
+
+Raw Data
+    ↓
+Validation
+    ↓
+Cleaning
+    ↓
+Feature Engineering
+    ↓
+Training
+    ↓
+Evaluation
+    ↓
+Model Registry
+    ↓
+FastAPI
+
+
 ## Structure de la présentation (cf. portfolio web)
 
 1. Business / ML framing
@@ -75,3 +106,25 @@ titanic-ml-service/
 8. Evaluation
 9. Explainability
 10. API / deployment
+
+## API
+
+### GET /health
+
+Vérifie que le service est disponible.
+
+### POST /predict
+
+Retourne la probabilité de survie d'un passager à partir de ses caractéristiques.
+
+### POST /explain
+
+Retourne les principaux facteurs ayant contribué à la prédiction.
+
+### POST /what-if
+
+Permet d'évaluer l'impact d'une modification de certaines caractéristiques du passager sur la probabilité de survie.
+
+### GET /model-info
+
+Retourne des informations sur le modèle actuellement déployé.
