@@ -77,21 +77,7 @@ titanic-ml-service/
 
 Le pipeline est organisé selon les étapes suivantes :
 
-Raw Data  
-    ↓  
-Validation  
-    ↓  
-Cleaning  
-    ↓  
-Feature Engineering  
-    ↓  
-Training  
-    ↓  
-Evaluation  
-    ↓  
-Model Registry  
-    ↓  
-FastAPI
+Raw Data → Validation → Cleaning → Feature Engineering → Training → Evaluation → Model Registry → FastAPI
 
 
 ## Structure de la présentation (cf. portfolio web)
