@@ -41,8 +41,8 @@ def save_dataset(df: pd.DataFrame, path: str | Path) -> None:
         raise ValueError(f"Unsupported file format: {path.suffix}")
 
 
-def load_interim_data(path=INTERIM_DATA_DIR / "titanic.csv") -> pd.DataFrame:
-    return pd.read_csv(path)
+def load_interim_data(path=INTERIM_DATA_DIR / "titanic_merged.parquet") -> pd.DataFrame:
+    return pd.read_parquet(path)
 
 
 def load_processed_data(path=PROCESSED_DATA_DIR / "features.parquet") -> pd.DataFrame:
