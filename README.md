@@ -1,116 +1,220 @@
+Voici une version plus proche de l'état actuel du projet.
+
 # Titanic ML Service
 
-Ce projet transforme le célèbre challenge Kaggle Titanic en un service de machine learning complet.
+Ce projet reprend le célèbre challenge Kaggle Titanic dans une démarche de data science et de ML engineering.
 
-L'objectif est de démontrer une démarche professionnelle de data science et de ML engineering, avec le meilleur score possible.
+L'objectif est double :
 
-- exploration et validation des données ;
-- feature engineering ;
-- entraînement et comparaison de modèles ;
-- explicabilité des prédictions ;
-- exposition du modèle via une API FastAPI ;
-- structuration du projet selon les bonnes pratiques de développement.
+* obtenir les meilleures performances possibles sur le problème de prédiction de survie ;
+* construire un pipeline de machine learning propre, reproductible et industrialisable.
 
+Le projet couvre actuellement :
+
+* data cleaning ;
+* feature engineering ;
+* analyse exploratoire des données (EDA) ;
+* sélection de variables ;
+* benchmark et comparaison de modèles ;
+* entraînement et évaluation ;
+* génération de soumissions Kaggle ;
+* automatisation via Makefile et UV.
+
+Les étapes de tuning avancé, d'explicabilité et d'exposition via API seront réalisées dans un second temps.
+
+---
 
 ## Structure du repository
 
-```
+```text
 titanic-ml-service/
 │
 ├── README.md
 ├── pyproject.toml
-├── .gitignore
-├── .env.example
+├── uv.lock
 ├── Makefile
+├── .gitignore
 │
 ├── data/
 │   ├── raw/
-│   ├── interim/
 │   ├── processed/
+│   ├── responses/
 │   └── submissions/
 │
 ├── notebooks/
-│   ├── 01_eda.ipynb
-│   ├── 02_feature_engineering.ipynb
-│   └── 03_model_experiments.ipynb
+│   ├── 1.0-tc-data-collection.ipynb
+│   ├── 2.0-tc-data-cleaning.ipynb
+│   ├── 3.0-tc-feature-engineering.ipynb
+│   ├── 4.0-tc-eda.ipynb
+│   └── 5.0-tc-feature-selection.ipynb
 │
-├── reports/
-│   ├── figures/
-│   └── metrics/
+├── scripts/
+│   ├── build_dataset.py
+│   ├── train.py
+│   ├── predict.py
+│   └── evaluate.py
 │
 ├── models/
-│   ├── model.pkl
-│   ├── preprocessor.pkl
-│   └── model_card.md
+│   └── model.joblib
 │
 ├── src/
 │   └── titanic/
-│       ├── __init__.py
-│       ├── config.py
+│       ├── cleaning.py
 │       ├── data.py
-│       ├── validation.py
-│       ├── features.py
-│       ├── train.py
+│       ├── eda.py
 │       ├── evaluate.py
+│       ├── features.py
+│       ├── imputations_age.py
+│       ├── models.py
+│       ├── params.py
 │       ├── predict.py
-│       └── explain.py
+│       ├── preprocessing.py
+│       ├── selection.py
+│       ├── tuning.py
+│       └── validation.py
 │
-├── api/
-│   ├── main.py
-│   ├── schemas.py
-│   └── routes/
-│       ├── predict.py
-│       ├── explain.py
-│       └── what_if.py
-│
-├── tests/
-│   ├── test_features.py
-│   ├── test_prediction.py
-│   └── test_api.py
-│
-└── docker/
-    └── Dockerfile
+└── reports/
+    ├── figures/
+    └── metrics/
 ```
 
+---
 
-## Architecture du projet
+## Pipeline actuel
 
 Le pipeline est organisé selon les étapes suivantes :
 
-Raw Data → Validation → Cleaning → Feature Engineering → Training → Evaluation → Model Registry → FastAPI
+```text
+Raw Data → Cleaning → Feature Engineering → Feature Selection → Preprocessing → Training → Prediction → Evaluation → Model Registry → FastAPI
+```
 
+---
 
-## Structure de la présentation (cf. portfolio web)
+## Construction du dataset
 
-1. Business / ML framing
-2. Data collection
-3. Data validation
-4. Data cleaning
-5. EDA
-6. Feature engineering
-7. Modeling
-8. Evaluation
-9. Explainability
-10. API / deployment
+Le dataset est généré à partir des fichiers Kaggle originaux (`train.csv` et `test.csv`).
 
-## API
+```bash
+make build
+```
 
-### GET /health
+Cette commande :
 
-Vérifie que le service est disponible.
+* charge les données brutes ;
+* fusionne train et test ;
+* applique les étapes de nettoyage ;
+* construit les variables dérivées ;
+* réalise les imputations nécessaires ;
+* sauvegarde le dataset final dans :
 
-### POST /predict
+```text
+data/processed/titanic_features.parquet
+```
 
-Retourne la probabilité de survie d'un passager à partir de ses caractéristiques.
+---
 
-### POST /explain
+## Entraînement
 
-Retourne les principaux facteurs ayant contribué à la prédiction.
+```bash
+make train
+```
 
-### POST /what-if
+Cette commande :
 
-Permet d'évaluer l'impact d'une modification de certaines caractéristiques du passager sur la probabilité de survie.
+* charge les features ;
+* applique la sélection de variables ;
+* construit le pipeline de preprocessing ;
+* benchmark plusieurs modèles ;
+* sélectionne automatiquement le meilleur ;
+* sauvegarde le modèle entraîné.
 
-### GET /model-info
+Les modèles actuellement comparés sont :
 
-Retourne des informations sur le modèle actuellement déployé.
+* Logistic Regression
+* SVC
+* KNN
+* Decision Tree
+* Random Forest
+* Extra Trees
+* AdaBoost
+* Bagging
+* Gradient Boosting
+* XGBoost
+* Gaussian Naive Bayes
+
+---
+
+## Génération des prédictions
+
+```bash
+make predict
+```
+
+Cette commande génère :
+
+```text
+data/submissions/submission.csv
+```
+
+au format attendu par Kaggle.
+
+---
+
+## Évaluation locale
+
+Le projet contient les réponses du jeu de test afin d'évaluer localement les performances sans soumettre systématiquement sur Kaggle.
+
+```bash
+make evaluate
+```
+
+Exemple :
+
+```text
+Local Kaggle Score: 0.7727
+```
+
+---
+
+## Workflow complet
+
+```bash
+make all
+```
+
+équivaut à :
+
+```bash
+make build
+make train
+make predict
+make evaluate
+```
+
+---
+
+## Notebooks
+
+Les notebooks servent uniquement à l'exploration et à l'analyse.
+
+Ils documentent notamment :
+
+* le nettoyage des données ;
+* les choix d'imputation ;
+* la création des variables ;
+* l'analyse exploratoire ;
+* la sélection de variables.
+
+La logique métier et le pipeline de production sont implémentés dans les modules Python du dossier `src/titanic`.
+
+---
+
+## Pistes d'amélioration
+
+* hyperparameter tuning ;
+* sélection automatique de variables ;
+* interprétabilité (SHAP) ;
+* suivi des expérimentations ;
+* API FastAPI ;
+* conteneurisation Docker ;
+* déploiement cloud.
