@@ -24,6 +24,63 @@ FEATURE_SETS = {
         if col != "AgeGroup"
     ],
 
+    "without_title": [
+        col for col in BASE_FEATURES
+        if col != "Title"
+    ],
+
+    "without_sex": [
+        col for col in BASE_FEATURES
+        if col != "SexIsMale"
+    ],
+
+    "without_title_and_sex": [
+        col for col in BASE_FEATURES
+        if col not in ["Title", "SexIsMale"]
+    ],
+
+    "without_age": [
+        col for col in BASE_FEATURES
+        if col not in ["AgeETR", "AgeGroup"]
+    ],
+
+    "without_fare": [
+        col for col in BASE_FEATURES
+        if col != "FarePerPerson_log1p"
+    ],
+
+    "without_group": [
+        col for col in BASE_FEATURES
+        if col != "GroupType"
+    ],
+
+    "without_cabin": [
+        col for col in BASE_FEATURES
+        if col not in ["Deck", "HasCabin"]
+    ],
+
+    "without_family_raw": [
+        col for col in BASE_FEATURES
+        if col not in ["SibSp", "Parch"]
+    ],
+
+    "minimal_strong": [
+        "Pclass",
+        "Title",
+        "AgeETR",
+        "FarePerPerson_log1p",
+        "HasCabin",
+    ],
+
+    "minimal_strong_with_group": [
+        "Pclass",
+        "Title",
+        "AgeETR",
+        "FarePerPerson_log1p",
+        "HasCabin",
+        "GroupType",
+    ],
+
     "with_family": BASE_FEATURES + [
         "IsAlone",
         "FamilySize",
