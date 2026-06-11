@@ -19,3 +19,7 @@ def make_predictions(model, X_test, passenger_ids=None):
 def save_submission(predictions_df, filepath):
     predictions_df.to_csv(filepath, index=True)
     return filepath
+
+
+def load_submission(filepath):
+    return pd.read_csv(filepath, index_col="PassengerId")
