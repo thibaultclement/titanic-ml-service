@@ -45,5 +45,5 @@ def load_interim_data(path=INTERIM_DATA_DIR / "titanic_merged.parquet") -> pd.Da
     return pd.read_parquet(path)
 
 
-def load_processed_data(path=PROCESSED_DATA_DIR / "features.parquet") -> pd.DataFrame:
+def load_processed_data(path=PROCESSED_DATA_DIR / "titanic_features.parquet") -> pd.DataFrame:
     return pd.read_parquet(path)
