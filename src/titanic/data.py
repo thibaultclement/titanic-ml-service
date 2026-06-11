@@ -1,12 +1,16 @@
 # src/titanic/data.py
 
-from pathlib import Path
 import pandas as pd
+from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-RAW_DATA_DIR = Path("data/raw")
-INTERIM_DATA_DIR = Path("data/interim")
-PROCESSED_DATA_DIR = Path("data/processed")
+DATA_DIR = PROJECT_ROOT / "data"
+
+RAW_DATA_DIR = DATA_DIR / "raw"
+INTERIM_DATA_DIR = DATA_DIR / "interim"
+PROCESSED_DATA_DIR = DATA_DIR / "processed"
+RESPONSES_DATA_DIR = DATA_DIR / "responses"
 
 
 def load_train(path=RAW_DATA_DIR / "train.csv") -> pd.DataFrame:
