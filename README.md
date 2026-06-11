@@ -1,5 +1,3 @@
-Voici une version plus proche de l'état actuel du projet.
-
 # Titanic ML Service
 
 Ce projet reprend le célèbre challenge Kaggle Titanic dans une démarche de data science et de ML engineering.
