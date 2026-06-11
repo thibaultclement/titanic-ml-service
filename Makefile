@@ -15,7 +15,7 @@ train:
 predict:
 	uv run python scripts/predict.py
 
-score:
+evaluate:
 	uv run python scripts/evaluate.py
 
 test:
