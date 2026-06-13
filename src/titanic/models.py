@@ -10,8 +10,15 @@ from sklearn.ensemble import (
     ExtraTreesClassifier,
 )
 from sklearn.naive_bayes import GaussianNB
-
 from xgboost import XGBClassifier
+from sklearn.pipeline import Pipeline
+
+
+def build_model_pipeline(preprocessor, model):
+    return Pipeline(steps=[
+        ("preprocessor", preprocessor),
+        ("model", model),
+    ])
 
 
 def get_baseline_models(random_state=42):

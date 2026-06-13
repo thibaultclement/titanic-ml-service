@@ -14,56 +14,56 @@ MODEL_GRIDS = {
     "AdaBoostClassifier": {
         "model": AdaBoostClassifier(random_state=42),
         "params": {
-            "n_estimators": [25, 50, 100, 200, 300],
-            "learning_rate": [0.01, 0.05, 0.1, 0.5, 1.0],
+            "model__n_estimators": [25, 50, 100, 200, 300],
+            "model__learning_rate": [0.01, 0.05, 0.1, 0.5, 1.0],
         },
     },
 
     "SVC": {
         "model": SVC(),
         "params": {
-            "C": [0.1, 0.5, 1, 2, 5, 10],
-            "kernel": ["linear", "rbf"],
-            "gamma": ["scale", "auto"],
+            "model__C": [0.1, 0.5, 1, 2, 5, 10],
+            "model__kernel": ["linear", "rbf"],
+            "model__gamma": ["scale", "auto"],
         },
     },
 
     "KNeighborsClassifier": {
         "model": KNeighborsClassifier(),
         "params": {
-            "n_neighbors": [3, 5, 7, 9, 11, 15],
-            "weights": ["uniform", "distance"],
-            "p": [1, 2],
+            "model__n_neighbors": [3, 5, 7, 9, 11, 15],
+            "model__weights": ["uniform", "distance"],
+            "model__p": [1, 2],
         },
     },
 
     "LogisticRegression": {
         "model": LogisticRegression(max_iter=2000),
         "params": {
-            "C": [0.001, 0.01, 0.1, 1, 10],
-            "solver": ["lbfgs", "liblinear"],
+            "model__C": [0.001, 0.01, 0.1, 1, 10],
+            "model__solver": ["lbfgs", "liblinear"],
         },
     },
 
     "GradientBoostingClassifier": {
         "model": GradientBoostingClassifier(random_state=42),
         "params": {
-            "n_estimators": [50, 100, 200, 300],
-            "learning_rate": [0.01, 0.05, 0.1, 0.2],
-            "max_depth": [1, 2, 3],
-            "subsample": [0.8, 1.0],
+            "model__n_estimators": [50, 100, 200, 300],
+            "model__learning_rate": [0.01, 0.05, 0.1, 0.2],
+            "model__max_depth": [1, 2, 3],
+            "model__subsample": [0.8, 1.0],
         },
     },
 
     "RandomForestClassifier": {
         "model": RandomForestClassifier(random_state=42),
         "params": {
-            "n_estimators": [100, 300, 500],
-            "max_depth": [3, 5, 8, None],
-            "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [1, 2, 4],
-            "max_features": ["sqrt", "log2"],
-            "class_weight": [None, "balanced"],
+            "model__n_estimators": [100, 300, 500],
+            "model__max_depth": [3, 5, 8, None],
+            "model__min_samples_split": [2, 5, 10],
+            "model__min_samples_leaf": [1, 2, 4],
+            "model__max_features": ["sqrt", "log2"],
+            "model__class_weight": [None, "balanced"],
         },
     },
 
@@ -73,11 +73,11 @@ MODEL_GRIDS = {
             eval_metric="logloss",
         ),
         "params": {
-            "max_depth": [2, 3, 5],
-            "learning_rate": [0.01, 0.05, 0.1],
-            "n_estimators": [100, 300],
-            "subsample": [0.8, 1.0],
-            "colsample_bytree": [0.8, 1.0],
+            "model__max_depth": [2, 3, 5],
+            "model__learning_rate": [0.01, 0.05, 0.1],
+            "model__n_estimators": [100, 300],
+            "model__subsample": [0.8, 1.0],
+            "model__colsample_bytree": [0.8, 1.0],
         },
     },
 }

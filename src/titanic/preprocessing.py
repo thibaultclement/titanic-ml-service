@@ -186,3 +186,16 @@ def preprocess_train_test(
     X_test_processed = preprocessor.transform(X_test[features])
 
     return X_train_processed, y_train, X_test_processed, preprocessor
+
+
+
+def get_train_test_data(df, features, target="Survived"):
+    train = df[df[target].notna()].copy()
+    test = df[df[target].isna()].copy()
+
+    X_train = train[features]
+    y_train = train[target].astype(int)
+
+    X_test = test[features]
+
+    return X_train, y_train, X_test

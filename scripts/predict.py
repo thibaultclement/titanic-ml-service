@@ -11,17 +11,10 @@ from titanic.predict import make_predictions, save_submission
 def main():
     model_bundle = joblib.load("models/model.joblib")
 
-    model = model_bundle["model"]
-    preprocessor = model_bundle["preprocessor"]
+    pipeline = model_bundle["pipeline"]
     features = model_bundle["features"]
 
     df = load_processed_data()
-
-    #df_model = select_model_features(
-    #    df,
-    #    feature_set="base",
-    #    include_target=True
-    #)
 
     df_model = select_model_features(
         df,
@@ -31,11 +24,9 @@ def main():
     test_df = df_model[df_model["Survived"].isna()].copy()
     X_test = test_df[features]
 
-    X_test_processed = preprocessor.transform(X_test)
-
     predictions_df = make_predictions(
-        model=model,
-        X_test=X_test_processed,
+        model=pipeline,
+        X_test=X_test,
         passenger_ids=test_df.index
     )
 

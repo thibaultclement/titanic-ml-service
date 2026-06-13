@@ -1,10 +1,12 @@
 import pandas as pd
 
 from sklearn.model_selection import StratifiedKFold, cross_validate
+from titanic.models import build_model_pipeline
 
 
 def benchmark_models(
     models,
+    preprocessor,
     X,
     y,
     scoring="accuracy",
@@ -20,8 +22,13 @@ def benchmark_models(
     results = []
 
     for name, model in models.items():
+        pipeline = build_model_pipeline(
+            preprocessor=preprocessor,
+            model=model
+        )
+
         cv_results = cross_validate(
-            estimator=model,
+            estimator=pipeline,
             X=X,
             y=y,
             cv=cv,

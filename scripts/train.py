@@ -1,14 +1,12 @@
-# scripts/train.py
-
 from pathlib import Path
 import joblib
 
 from titanic.data import load_processed_data
 from titanic.selection import select_model_features
-from titanic.models import get_final_model
-
+from titanic.models import get_final_model, build_model_pipeline
 from titanic.preprocessing import (
-    preprocess_train_test,
+    build_preprocessor,
+    get_train_test_data,
     DEFAULT_CATEGORICAL_FEATURES,
     DEFAULT_BINARY_FEATURES,
     DEFAULT_NUMERIC_FEATURES,
@@ -28,27 +26,36 @@ def main():
         if col != "Survived"
     ]
 
-    X_train, y_train, X_test, preprocessor = preprocess_train_test(
+    X_train, y_train, X_test = get_train_test_data(
         df,
         features=features,
-        target="Survived",
+        target="Survived"
+    )
+
+    preprocessor = build_preprocessor(
+        df=X_train,
+        features=features,
         scale_numeric=True,
         categorical_features=DEFAULT_CATEGORICAL_FEATURES,
         binary_features=DEFAULT_BINARY_FEATURES,
         numeric_features=DEFAULT_NUMERIC_FEATURES,
     )
 
-    model = get_final_model(random_state=42)
+    model = get_final_model()
 
-    model.fit(X_train, y_train)
+    pipeline = build_model_pipeline(
+        preprocessor=preprocessor,
+        model=model
+    )
+
+    pipeline.fit(X_train, y_train)
 
     Path("models").mkdir(exist_ok=True)
 
     joblib.dump(
         {
-            "model": model,
+            "pipeline": pipeline,
             "model_name": model.__class__.__name__,
-            "preprocessor": preprocessor,
             "features": features,
         },
         "models/model.joblib"

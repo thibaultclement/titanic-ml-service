@@ -1,9 +1,11 @@
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from titanic.models import build_model_pipeline
 
 
 def tune_model(
     model,
     param_grid,
+    preprocessor,
     X,
     y,
     scoring="accuracy",
@@ -18,8 +20,13 @@ def tune_model(
         random_state=random_state
     )
 
+    pipeline = build_model_pipeline(
+        preprocessor=preprocessor,
+        model=model
+    )
+
     grid = GridSearchCV(
-        estimator=model,
+        estimator=pipeline,
         param_grid=param_grid,
         scoring=scoring,
         cv=cv,
