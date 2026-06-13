@@ -5,8 +5,7 @@ import joblib
 
 from titanic.data import load_processed_data
 from titanic.selection import select_model_features
-from titanic.models import get_baseline_models
-from titanic.validation import benchmark_models
+from titanic.models import get_final_model
 
 from titanic.preprocessing import (
     preprocess_train_test,
@@ -19,12 +18,10 @@ from titanic.preprocessing import (
 def main():
     df = load_processed_data()
 
-    #df = select_model_features(
-    #    df,
-    #    feature_set="base"
-    #)
-
-    df = select_model_features(df)
+    df = select_model_features(
+        df,
+        include_target=True
+    )
 
     features = [
         col for col in df.columns
@@ -41,44 +38,25 @@ def main():
         numeric_features=DEFAULT_NUMERIC_FEATURES,
     )
 
-    models = get_baseline_models()
+    model = get_final_model(random_state=42)
 
-    results = benchmark_models(
-        models=models,
-        X=X_train,
-        y=y_train
-    )
-
-    print(results)
-
-    best_model_name = results.iloc[0]["model"]
-    best_cv_score = results.iloc[0]["test_score_mean"]
-
-    print(f"\nBest model: {best_model_name}")
-    print(f"Best CV score: {best_cv_score:.4f}")
-
-    best_model = models[best_model_name]
-
-    best_model.fit(
-        X=X_train,
-        y=y_train
-    )
+    model.fit(X_train, y_train)
 
     Path("models").mkdir(exist_ok=True)
 
     joblib.dump(
         {
-            "model": best_model,
-            "model_name": best_model_name,
-            "cv_score": best_cv_score,
-            "cv_results": results,
+            "model": model,
+            "model_name": model.__class__.__name__,
             "preprocessor": preprocessor,
             "features": features,
         },
         "models/model.joblib"
     )
 
-    print("\nModel saved to models/model.joblib")
+    print(f"Final model trained: {model.__class__.__name__}")
+    print(f"Features used: {features}")
+    print("Model saved to models/model.joblib")
 
 
 if __name__ == "__main__":
