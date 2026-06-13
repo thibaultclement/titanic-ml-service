@@ -19,10 +19,12 @@ from titanic.preprocessing import (
 def main():
     df = load_processed_data()
 
-    df = select_model_features(
-        df,
-        feature_set="base"
-    )
+    #df = select_model_features(
+    #    df,
+    #    feature_set="base"
+    #)
+
+    df = select_model_features(df)
 
     features = [
         col for col in df.columns
