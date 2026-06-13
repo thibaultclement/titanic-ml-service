@@ -31,6 +31,12 @@ build/
 *.pkl
 *.joblib
 
+# Kaggle submissions
+data/submissions/
+
 # Rapports générés
 reports/figures/
 reports/metrics/
+
+# Jupyter
+*.nbconvert.ipynb
