@@ -115,11 +115,13 @@ FINAL_FEATURES = [
     
     #"SibSp",
     #"Parch",
-    #"IsAlone",
+    "IsAlone",
     #"HasFamily",
     #"FamilySize",
     #"GroupType",
     #"GroupSize",
+    "FamilySurvivalRate",
+    #"FamilySurvivalRateCount",
 
     #"Fare",
     "FarePerPerson_log1p",
@@ -129,6 +131,8 @@ FINAL_FEATURES = [
     #"TicketText",
     #"TicketNumber",
     #"TicketNumberClass",
+    "TicketSurvivalRate",
+    #"TicketSurvivalRateCount",
 
     #"Cabin",
     "HasCabin",
@@ -138,7 +142,7 @@ FINAL_FEATURES = [
     #"Embarked",
     #"EmbarkedMode",
 
-    "Deck",
+    #"Deck",
     
 ]
 
