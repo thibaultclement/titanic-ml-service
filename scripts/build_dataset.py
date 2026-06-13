@@ -3,6 +3,7 @@
 from titanic.data import load_raw_data, save_dataset
 from titanic.cleaning import clean_data
 from titanic.features import build_features
+from titanic.survival_features import add_survival_rate_features
 
 
 def build_dataset():
@@ -21,6 +22,8 @@ def build_dataset():
     )
 
     df_features = build_features(df_cleaned)
+    df_features = add_survival_rate_features(df_features)
+
 
     save_dataset(
         df_features,
