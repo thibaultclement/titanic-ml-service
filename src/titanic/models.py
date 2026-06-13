@@ -31,3 +31,11 @@ def get_baseline_models(random_state=42):
             eval_metric="logloss"
         ),
     }
+
+
+def get_final_model(random_state=42):
+    return SVC(
+        C=2,
+        gamma="scale",
+        kernel="rbf",
+    )
