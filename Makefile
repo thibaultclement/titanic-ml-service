@@ -1,13 +1,13 @@
-.PHONY: install sync build lint format clean test
+.PHONY: install sync build train predict evaluate all test format lint fix clean tree eda
 
 install:
 	uv sync
 
+sync:
+	uv sync
+
 build:
 	uv run python scripts/build_dataset.py
-
-eda:
-	jupyter lab
 
 train:
 	uv run python scripts/train.py
@@ -17,6 +17,8 @@ predict:
 
 evaluate:
 	uv run python scripts/evaluate.py
+
+all: build train predict evaluate
 
 test:
 	uv run pytest
@@ -35,10 +37,7 @@ clean:
 	find . -type d -name ".ipynb_checkpoints" -exec rm -rf {} +
 
 tree:
-	tree -I '.venv|__pycache__|.git'
+	tree -I '.venv|__pycache__|.git|*.egg-info'
 
-all:
-	uv run python scripts/build_dataset.py
-	uv run python scripts/train.py
-	uv run python scripts/predict.py
-	uv run python scripts/evaluate.py
+eda:
+	jupyter lab

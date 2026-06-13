@@ -1,6 +1,6 @@
 # Titanic ML Service
 
-Ce projet reprend le célèbre challenge Kaggle Titanic dans une démarche de data science et de ML engineering.
+Ce projet reprend le célèbre challenge Kaggle Titanic dans une démarche de Data Science et de ML Engineering.
 
 L'objectif est double :
 
@@ -14,11 +14,45 @@ Le projet couvre actuellement :
 * analyse exploratoire des données (EDA) ;
 * sélection de variables ;
 * benchmark et comparaison de modèles ;
+* hyperparameter tuning ;
 * entraînement et évaluation ;
 * génération de soumissions Kaggle ;
 * automatisation via Makefile et UV.
 
-Les étapes de tuning avancé, d'explicabilité et d'exposition via API seront réalisées dans un second temps.
+Les étapes d'explicabilité, d'API et de déploiement seront réalisées dans un second temps.
+
+---
+
+## Résultats
+
+### Modèle final
+
+* Modèle : SVC
+* Kernel : RBF
+* C : 2
+* Gamma : scale
+
+### Performance
+
+* Cross-validation : ~0.80
+* Score local Kaggle : ~0.80
+
+### Variables retenues
+
+Les variables finales incluent notamment :
+
+* Pclass
+* Title
+* HasNickname
+* AgeETR
+* IsChild
+* FarePerPerson_log1p
+* HasCabin
+* IsAlone
+* FamilySurvivalRate
+* TicketSurvivalRate
+
+Les variables `FamilySurvivalRate` et `TicketSurvivalRate` constituent les principales améliorations apportées en fin de projet.
 
 ---
 
@@ -44,7 +78,8 @@ titanic-ml-service/
 │   ├── 2.0-tc-data-cleaning.ipynb
 │   ├── 3.0-tc-feature-engineering.ipynb
 │   ├── 4.0-tc-eda.ipynb
-│   └── 5.0-tc-feature-selection.ipynb
+│   ├── 5.0-tc-feature-selection.ipynb
+│   └── 6.0-tc-model-selection.ipynb
 │
 ├── scripts/
 │   ├── build_dataset.py
@@ -53,7 +88,6 @@ titanic-ml-service/
 │   └── evaluate.py
 │
 ├── models/
-│   └── model.joblib
 │
 ├── src/
 │   └── titanic/
@@ -83,8 +117,24 @@ titanic-ml-service/
 Le pipeline est organisé selon les étapes suivantes :
 
 ```text
-Raw Data → Cleaning → Feature Engineering → Feature Selection → Preprocessing → Training → Prediction → Evaluation → Model Registry → FastAPI
+Raw Data
+    ↓
+Cleaning
+    ↓
+Feature Engineering
+    ↓
+Feature Selection
+    ↓
+Preprocessing
+    ↓
+Training
+    ↓
+Prediction
+    ↓
+Evaluation
 ```
+
+Le preprocessing est intégré dans une véritable pipeline scikit-learn afin d'éviter toute fuite de données lors de la validation croisée et du tuning.
 
 ---
 
@@ -121,24 +171,21 @@ Cette commande :
 
 * charge les features ;
 * applique la sélection de variables ;
-* construit le pipeline de preprocessing ;
-* benchmark plusieurs modèles ;
-* sélectionne automatiquement le meilleur ;
-* sauvegarde le modèle entraîné.
+* construit la pipeline de preprocessing ;
+* entraîne le modèle final ;
+* sauvegarde la pipeline entraînée.
 
-Les modèles actuellement comparés sont :
+Le modèle sauvegardé contient :
 
-* Logistic Regression
-* SVC
-* KNN
-* Decision Tree
-* Random Forest
-* Extra Trees
-* AdaBoost
-* Bagging
-* Gradient Boosting
-* XGBoost
-* Gaussian Naive Bayes
+* le preprocessing ;
+* le modèle ;
+* la liste des variables utilisées.
+
+Le tout est stocké dans :
+
+```text
+models/model.joblib
+```
 
 ---
 
@@ -169,7 +216,7 @@ make evaluate
 Exemple :
 
 ```text
-Local Kaggle Score: 0.7727
+Local Kaggle Score: 0.8014
 ```
 
 ---
@@ -201,18 +248,50 @@ Ils documentent notamment :
 * les choix d'imputation ;
 * la création des variables ;
 * l'analyse exploratoire ;
-* la sélection de variables.
+* la sélection de variables ;
+* le benchmark des modèles ;
+* le tuning des hyperparamètres.
 
 La logique métier et le pipeline de production sont implémentés dans les modules Python du dossier `src/titanic`.
 
 ---
 
+## Technologies utilisées
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* XGBoost
+* Matplotlib
+* Seaborn
+* Jupyter
+* UV
+* Ruff
+
+---
+
+## Commandes utiles
+
+```bash
+make build
+make train
+make predict
+make evaluate
+make all
+make lint
+make format
+make test
+```
+
+---
+
 ## Pistes d'amélioration
 
-* hyperparameter tuning ;
-* sélection automatique de variables ;
-* interprétabilité (SHAP) ;
+* nouvelles expérimentations de features ;
+* interprétabilité des prédictions (SHAP) ;
 * suivi des expérimentations ;
 * API FastAPI ;
 * conteneurisation Docker ;
-* déploiement cloud.
+* déploiement cloud ;
+* monitoring du modèle.
