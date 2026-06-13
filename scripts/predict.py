@@ -17,9 +17,14 @@ def main():
 
     df = load_processed_data()
 
+    #df_model = select_model_features(
+    #    df,
+    #    feature_set="base",
+    #    include_target=True
+    #)
+
     df_model = select_model_features(
         df,
-        feature_set="base",
         include_target=True
     )
 
