@@ -95,8 +95,55 @@ FEATURE_SETS = {
     ],
 }
 
+FINAL_FEATURES = [
 
-def select_model_features(
+    "Pclass",
+
+    #"Name",
+    "Title",
+    "HasNickname",
+    #"Surname",
+
+    #"Age",
+    "AgeETR",
+    #"AgeGroup",
+    #"AgeDecade",
+    "IsChild",
+
+    #"Sex",
+    #"SexIsMale",
+    
+    #"SibSp",
+    #"Parch",
+    #"IsAlone",
+    #"HasFamily",
+    #"FamilySize",
+    #"GroupType",
+    #"GroupSize",
+
+    #"Fare",
+    "FarePerPerson_log1p",
+    #"FarePerTicketPassenger_log1p",
+
+    #"Ticket",
+    #"TicketText",
+    #"TicketNumber",
+    #"TicketNumberClass",
+
+    #"Cabin",
+    "HasCabin",
+    #"CabinNumber",
+    #"CabinCount",
+    
+    #"Embarked",
+    #"EmbarkedMode",
+
+    "Deck",
+    
+]
+
+
+def select_model_features_set(
     df,
     feature_set="base",
     target="Survived",
@@ -111,6 +158,34 @@ def select_model_features(
     features = FEATURE_SETS[feature_set]
 
     selected_columns = features.copy()
+
+    if include_target and target in df.columns:
+        selected_columns = [target] + selected_columns
+
+    missing_columns = [
+        col for col in selected_columns
+        if col not in df.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(f"Missing columns in dataframe: {missing_columns}")
+
+    return df[selected_columns]
+
+
+
+def select_model_features(
+    df,
+    target="Survived",
+    index_col="PassengerId",
+    include_target=True,
+):
+    df = df.copy()
+
+    if index_col in df.columns:
+        df = df.set_index(index_col, drop=True)
+
+    selected_columns = FINAL_FEATURES.copy()
 
     if include_target and target in df.columns:
         selected_columns = [target] + selected_columns
