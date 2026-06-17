@@ -45,4 +45,5 @@ def get_final_model(random_state=42):
         C=2,
         gamma="scale",
         kernel="rbf",
+        probability=True,
     )
