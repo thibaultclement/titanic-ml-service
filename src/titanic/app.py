@@ -98,13 +98,13 @@ age = st.number_input(
 )
 
 
-travel_group_size = st.number_input(
-    "Nombre de personnes voyageant ensemble",
-    min_value=1,
-    max_value=20,
-    value=1,
-    step=1,
+travel_status = st.radio(
+    "Voyagez-vous seul ?",
+    options=["Oui", "Non"],
+    horizontal=True,
 )
+
+travel_group_size = 1 if travel_status == "Oui" else 2
 
 
 # ---------------------------------------------------------------------
