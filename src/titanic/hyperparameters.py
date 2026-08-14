@@ -1,14 +1,12 @@
 from sklearn.ensemble import (
     AdaBoostClassifier,
-    RandomForestClassifier,
     GradientBoostingClassifier,
+    RandomForestClassifier,
 )
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-
 from xgboost import XGBClassifier
-
 
 MODEL_GRIDS = {
     "AdaBoostClassifier": {
@@ -18,7 +16,6 @@ MODEL_GRIDS = {
             "model__learning_rate": [0.01, 0.05, 0.1, 0.5, 1.0],
         },
     },
-
     "SVC": {
         "model": SVC(),
         "params": {
@@ -27,7 +24,6 @@ MODEL_GRIDS = {
             "model__gamma": ["scale", "auto"],
         },
     },
-
     "KNeighborsClassifier": {
         "model": KNeighborsClassifier(),
         "params": {
@@ -36,7 +32,6 @@ MODEL_GRIDS = {
             "model__p": [1, 2],
         },
     },
-
     "LogisticRegression": {
         "model": LogisticRegression(max_iter=2000),
         "params": {
@@ -44,7 +39,6 @@ MODEL_GRIDS = {
             "model__solver": ["lbfgs", "liblinear"],
         },
     },
-
     "GradientBoostingClassifier": {
         "model": GradientBoostingClassifier(random_state=42),
         "params": {
@@ -54,7 +48,6 @@ MODEL_GRIDS = {
             "model__subsample": [0.8, 1.0],
         },
     },
-
     "RandomForestClassifier": {
         "model": RandomForestClassifier(random_state=42),
         "params": {
@@ -66,7 +59,6 @@ MODEL_GRIDS = {
             "model__class_weight": [None, "balanced"],
         },
     },
-
     "XGBClassifier": {
         "model": XGBClassifier(
             random_state=42,

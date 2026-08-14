@@ -10,8 +10,7 @@ class WhatIfService:
             "before": before,
             "after": after,
             "probability_difference": (
-                after["survival_probability"]
-                - before["survival_probability"]
+                after["survival_probability"] - before["survival_probability"]
             ),
         }
 

@@ -4,7 +4,6 @@ import requests
 import shap
 import streamlit as st
 
-
 API_URL = "http://127.0.0.1:8000"
 
 
@@ -95,11 +94,9 @@ if st.button("Prédire la survie"):
     factors_df = pd.DataFrame(factors)
     factors_df["abs_contribution"] = factors_df["contribution"].abs()
 
-    factors_df = (
-        factors_df
-        .sort_values("abs_contribution", ascending=False)
-        .reset_index(drop=True)
-    )
+    factors_df = factors_df.sort_values(
+        "abs_contribution", ascending=False
+    ).reset_index(drop=True)
 
     st.dataframe(
         factors_df[["feature", "contribution", "direction"]],
@@ -121,15 +118,9 @@ if st.button("Prédire la survie"):
 
     shap_values = factors_df["contribution"].to_numpy()
     feature_names = factors_df["feature"].tolist()
-    data_values = [
-        feature_values.get(feature)
-        for feature in feature_names
-    ]
+    data_values = [feature_values.get(feature) for feature in feature_names]
 
-    base_value = (
-        explanation["survival_probability"]
-        - factors_df["contribution"].sum()
-    )
+    base_value = explanation["survival_probability"] - factors_df["contribution"].sum()
 
     shap_explanation = shap.Explanation(
         values=shap_values,

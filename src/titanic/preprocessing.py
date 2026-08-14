@@ -1,10 +1,7 @@
-import pandas as pd
-
 from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
-
 
 DEFAULT_CATEGORICAL_FEATURES = [
     "Pclass",
@@ -69,44 +66,26 @@ def infer_feature_types(
     binary_features = binary_features or []
     numeric_features = numeric_features or []
 
-    categorical_features = [
-        col for col in categorical_features
-        if col in features
-    ]
+    categorical_features = [col for col in categorical_features if col in features]
 
-    binary_features = [
-        col for col in binary_features
-        if col in features
-    ]
+    binary_features = [col for col in binary_features if col in features]
 
-    numeric_features = [
-        col for col in numeric_features
-        if col in features
-    ]
+    numeric_features = [col for col in numeric_features if col in features]
 
-    already_assigned = set(
-        categorical_features
-        + binary_features
-        + numeric_features
-    )
+    already_assigned = set(categorical_features + binary_features + numeric_features)
 
-    remaining_features = [
-        col for col in features
-        if col not in already_assigned
-    ]
+    remaining_features = [col for col in features if col not in already_assigned]
 
     inferred_categorical = (
         df[remaining_features]
         .select_dtypes(include=["object", "category", "bool"])
-        .columns
-        .tolist()
+        .columns.tolist()
     )
 
     inferred_numeric = (
         df[remaining_features]
         .select_dtypes(include=["int64", "float64", "int32", "float32"])
-        .columns
-        .tolist()
+        .columns.tolist()
     )
 
     categorical_features = categorical_features + inferred_categorical
@@ -132,23 +111,31 @@ def build_preprocessor(
     )
 
     if scale_numeric:
-        numeric_transformer = Pipeline(steps=[
-            ("imputer", SimpleImputer(strategy="median")),
-            ("scaler", StandardScaler()),
-        ])
+        numeric_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="median")),
+                ("scaler", StandardScaler()),
+            ]
+        )
     else:
-        numeric_transformer = Pipeline(steps=[
-            ("imputer", SimpleImputer(strategy="median")),
-        ])
+        numeric_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="median")),
+            ]
+        )
 
-    categorical_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("encoder", OneHotEncoder(handle_unknown="ignore")),
-    ])
+    categorical_transformer = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("encoder", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
 
-    binary_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-    ])
+    binary_transformer = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+        ]
+    )
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -186,7 +173,6 @@ def preprocess_train_test(
     X_test_processed = preprocessor.transform(X_test[features])
 
     return X_train_processed, y_train, X_test_processed, preprocessor
-
 
 
 def get_train_test_data(df, features, target="Survived"):

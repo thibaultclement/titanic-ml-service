@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import joblib
 
 
@@ -12,9 +10,7 @@ class ModelService:
 
         self.global_survival_rate = bundle["global_survival_rate"]
         self.fare_per_person_by_pclass = bundle["fare_per_person_by_pclass"]
-        self.global_fare_per_person_log1p = bundle[
-            "global_fare_per_person_log1p"
-        ]
+        self.global_fare_per_person_log1p = bundle["global_fare_per_person_log1p"]
 
         self.shap_background = bundle["shap_background"]
 

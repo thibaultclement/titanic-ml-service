@@ -1,14 +1,13 @@
 # titanic.cleaning
 
-import numpy as np
-import pandas as pd
-
 from collections import Counter
 
+import numpy as np
 
 # ---------------------------------------------------------------------
 # Outliers
 # ---------------------------------------------------------------------
+
 
 def detect_outliers_tukey(df, features, n=0, iqr_multiplier=1.5):
     outlier_indices = []
@@ -21,19 +20,13 @@ def detect_outliers_tukey(df, features, n=0, iqr_multiplier=1.5):
         lower_bound = Q1 - iqr_multiplier * IQR
         upper_bound = Q3 + iqr_multiplier * IQR
 
-        outlier_list_col = df[
-            (df[col] < lower_bound) |
-            (df[col] > upper_bound)
-        ].index
+        outlier_list_col = df[(df[col] < lower_bound) | (df[col] > upper_bound)].index
 
         outlier_indices.extend(outlier_list_col)
 
     outlier_counts = Counter(outlier_indices)
 
-    multiple_outliers = [
-        index for index, count in outlier_counts.items()
-        if count > n
-    ]
+    multiple_outliers = [index for index, count in outlier_counts.items() if count > n]
 
     return multiple_outliers
 
@@ -47,6 +40,7 @@ def set_outliers_to_nan(df, var, threshold):
 # ---------------------------------------------------------------------
 # Generic imputers
 # ---------------------------------------------------------------------
+
 
 def fill_with_mode(df, var):
     return df[var].fillna(df[var].mode()[0])
@@ -67,6 +61,7 @@ def fill_with_group_median(df, var, group_cols):
 # Titanic-specific cleaning rules
 # ---------------------------------------------------------------------
 
+
 def impute_fare(df):
     """
     Impute missing Fare values using the median Fare
@@ -77,19 +72,11 @@ def impute_fare(df):
     """
     df = df.copy()
 
-    missing_mask = df["Fare"].isna()
-
-    fare_by_pclass_embarked = (
-        df
-        .groupby(["Pclass", "Embarked"])["Fare"]
-        .transform("median")
+    fare_by_pclass_embarked = df.groupby(["Pclass", "Embarked"])["Fare"].transform(
+        "median"
     )
 
-    fare_by_pclass = (
-        df
-        .groupby("Pclass")["Fare"]
-        .transform("median")
-    )
+    fare_by_pclass = df.groupby("Pclass")["Fare"].transform("median")
 
     global_fare_median = df["Fare"].median()
 

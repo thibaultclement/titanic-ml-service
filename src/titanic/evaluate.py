@@ -6,16 +6,12 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 def load_responses(path="../data/responses/responses.csv"):
     return pd.read_csv(
-        path,
-        index_col="PassengerId",
-        usecols=["PassengerId", "Survived"]
+        path, index_col="PassengerId", usecols=["PassengerId", "Survived"]
     )
 
 
 def evaluate_submission(
-    predictions_df,
-    responses_path="../data/responses/responses.csv",
-    verbose=True
+    predictions_df, responses_path="../data/responses/responses.csv", verbose=True
 ):
     responses = load_responses(responses_path)
 

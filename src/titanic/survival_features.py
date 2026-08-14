@@ -1,7 +1,5 @@
 # src/titanic/survival_features.py
 
-import pandas as pd
-
 
 def add_group_survival_rate(
     df,
@@ -31,11 +29,7 @@ def add_group_survival_rate(
 
     global_rate = y_train.mean()
 
-    stats = (
-        df.loc[train_mask]
-        .groupby(group_col)[target]
-        .agg(["sum", "count"])
-    )
+    stats = df.loc[train_mask].groupby(group_col)[target].agg(["sum", "count"])
 
     group_sum = df[group_col].map(stats["sum"]).fillna(0)
     group_count = df[group_col].map(stats["count"]).fillna(0)

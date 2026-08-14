@@ -1,7 +1,8 @@
 # src/titanic/data.py
 
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -49,5 +50,7 @@ def load_interim_data(path=INTERIM_DATA_DIR / "titanic_merged.parquet") -> pd.Da
     return pd.read_parquet(path)
 
 
-def load_processed_data(path=PROCESSED_DATA_DIR / "titanic_features.parquet") -> pd.DataFrame:
+def load_processed_data(
+    path=PROCESSED_DATA_DIR / "titanic_features.parquet",
+) -> pd.DataFrame:
     return pd.read_parquet(path)

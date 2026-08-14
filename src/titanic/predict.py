@@ -9,11 +9,7 @@ def make_predictions(model, X_test, passenger_ids=None):
     else:
         index = passenger_ids
 
-    return pd.DataFrame(
-        predictions,
-        index=index,
-        columns=["Survived"]
-    )
+    return pd.DataFrame(predictions, index=index, columns=["Survived"])
 
 
 def save_submission(predictions_df, filepath):

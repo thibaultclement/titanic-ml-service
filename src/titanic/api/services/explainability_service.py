@@ -1,5 +1,5 @@
-import shap
 import pandas as pd
+import shap
 
 from src.titanic.api.services.feature_service import feature_service
 from src.titanic.api.services.model_service import model_service
@@ -44,11 +44,13 @@ class ExplainabilityService:
         ):
             contribution = float(contribution)
 
-            contributions.append({
-                "feature": feature,
-                "contribution": contribution,
-                "direction": "positive" if contribution >= 0 else "negative",
-            })
+            contributions.append(
+                {
+                    "feature": feature,
+                    "contribution": contribution,
+                    "direction": "positive" if contribution >= 0 else "negative",
+                }
+            )
 
         contributions = sorted(
             contributions,

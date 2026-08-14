@@ -13,57 +13,24 @@ BASE_FEATURES = [
     "FarePerPerson_log1p",
     "Deck",
     "HasCabin",
-    #"EmbarkedMode",
+    # "EmbarkedMode",
 ]
 
 FEATURE_SETS = {
     "base": BASE_FEATURES,
-
-    "without_age_group": [
-        col for col in BASE_FEATURES
-        if col != "AgeGroup"
-    ],
-
-    "without_title": [
-        col for col in BASE_FEATURES
-        if col != "Title"
-    ],
-
-    "without_sex": [
-        col for col in BASE_FEATURES
-        if col != "SexIsMale"
-    ],
-
+    "without_age_group": [col for col in BASE_FEATURES if col != "AgeGroup"],
+    "without_title": [col for col in BASE_FEATURES if col != "Title"],
+    "without_sex": [col for col in BASE_FEATURES if col != "SexIsMale"],
     "without_title_and_sex": [
-        col for col in BASE_FEATURES
-        if col not in ["Title", "SexIsMale"]
+        col for col in BASE_FEATURES if col not in ["Title", "SexIsMale"]
     ],
-
-    "without_age": [
-        col for col in BASE_FEATURES
-        if col not in ["AgeETR", "AgeGroup"]
-    ],
-
-    "without_fare": [
-        col for col in BASE_FEATURES
-        if col != "FarePerPerson_log1p"
-    ],
-
-    "without_group": [
-        col for col in BASE_FEATURES
-        if col != "GroupType"
-    ],
-
-    "without_cabin": [
-        col for col in BASE_FEATURES
-        if col not in ["Deck", "HasCabin"]
-    ],
-
+    "without_age": [col for col in BASE_FEATURES if col not in ["AgeETR", "AgeGroup"]],
+    "without_fare": [col for col in BASE_FEATURES if col != "FarePerPerson_log1p"],
+    "without_group": [col for col in BASE_FEATURES if col != "GroupType"],
+    "without_cabin": [col for col in BASE_FEATURES if col not in ["Deck", "HasCabin"]],
     "without_family_raw": [
-        col for col in BASE_FEATURES
-        if col not in ["SibSp", "Parch"]
+        col for col in BASE_FEATURES if col not in ["SibSp", "Parch"]
     ],
-
     "minimal_strong": [
         "Pclass",
         "Title",
@@ -71,7 +38,6 @@ FEATURE_SETS = {
         "FarePerPerson_log1p",
         "HasCabin",
     ],
-
     "minimal_strong_with_group": [
         "Pclass",
         "Title",
@@ -80,70 +46,59 @@ FEATURE_SETS = {
         "HasCabin",
         "GroupType",
     ],
-
-    "with_family": BASE_FEATURES + [
+    "with_family": BASE_FEATURES
+    + [
         "IsAlone",
         "FamilySize",
     ],
-
-    "with_ticket": BASE_FEATURES + [
+    "with_ticket": BASE_FEATURES
+    + [
         "TicketNumberClass",
     ],
-
-    "with_cabin": BASE_FEATURES + [
+    "with_cabin": BASE_FEATURES
+    + [
         "CabinCount",
     ],
 }
 
 FINAL_FEATURES = [
-
     "Pclass",
-
-    #"Name",
+    # "Name",
     "Title",
     "HasNickname",
-    #"Surname",
-
-    #"Age",
+    # "Surname",
+    # "Age",
     "AgeETR",
-    #"AgeGroup",
-    #"AgeDecade",
+    # "AgeGroup",
+    # "AgeDecade",
     "IsChild",
-
-    #"Sex",
-    #"SexIsMale",
-    
-    #"SibSp",
-    #"Parch",
+    # "Sex",
+    # "SexIsMale",
+    # "SibSp",
+    # "Parch",
     "IsAlone",
-    #"HasFamily",
-    #"FamilySize",
-    #"GroupType",
-    #"GroupSize",
+    # "HasFamily",
+    # "FamilySize",
+    # "GroupType",
+    # "GroupSize",
     "FamilySurvivalRate",
-    #"FamilySurvivalRateCount",
-
-    #"Fare",
+    # "FamilySurvivalRateCount",
+    # "Fare",
     "FarePerPerson_log1p",
-    #"FarePerTicketPassenger_log1p",
-
-    #"Ticket",
-    #"TicketText",
-    #"TicketNumber",
-    #"TicketNumberClass",
+    # "FarePerTicketPassenger_log1p",
+    # "Ticket",
+    # "TicketText",
+    # "TicketNumber",
+    # "TicketNumberClass",
     "TicketSurvivalRate",
-    #"TicketSurvivalRateCount",
-
-    #"Cabin",
+    # "TicketSurvivalRateCount",
+    # "Cabin",
     "HasCabin",
-    #"CabinNumber",
-    #"CabinCount",
-    
-    #"Embarked",
-    #"EmbarkedMode",
-
-    #"Deck",
-    
+    # "CabinNumber",
+    # "CabinCount",
+    # "Embarked",
+    # "EmbarkedMode",
+    # "Deck",
 ]
 
 
@@ -166,16 +121,12 @@ def select_model_features_set(
     if include_target and target in df.columns:
         selected_columns = [target] + selected_columns
 
-    missing_columns = [
-        col for col in selected_columns
-        if col not in df.columns
-    ]
+    missing_columns = [col for col in selected_columns if col not in df.columns]
 
     if missing_columns:
         raise ValueError(f"Missing columns in dataframe: {missing_columns}")
 
     return df[selected_columns]
-
 
 
 def select_model_features(
@@ -194,10 +145,7 @@ def select_model_features(
     if include_target and target in df.columns:
         selected_columns = [target] + selected_columns
 
-    missing_columns = [
-        col for col in selected_columns
-        if col not in df.columns
-    ]
+    missing_columns = [col for col in selected_columns if col not in df.columns]
 
     if missing_columns:
         raise ValueError(f"Missing columns in dataframe: {missing_columns}")

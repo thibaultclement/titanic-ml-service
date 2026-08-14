@@ -1,32 +1,20 @@
 from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
 class PassengerInput(BaseModel):
-    pclass: Literal[1, 2, 3] = Field(
-        description="Passenger class: 1, 2 or 3."
-    )
+    pclass: Literal[1, 2, 3] = Field(description="Passenger class: 1, 2 or 3.")
     title: Literal["Mr", "Mrs", "Miss", "Master"] = Field(
         description="Passenger title."
     )
-    age: float = Field(
-        default=28.0,
-        ge=0,
-        le=100,
-        description="Passenger age."
-    )
-    sex: Literal["male", "female"] = Field(
-        description="Passenger sex."
-    )
+    age: float = Field(default=28.0, ge=0, le=100, description="Passenger age.")
+    sex: Literal["male", "female"] = Field(description="Passenger sex.")
     travel_group_size: int = Field(
-        default=1,
-        ge=1,
-        le=20,
-        description="Number of people travelling together."
+        default=1, ge=1, le=20, description="Number of people travelling together."
     )
     has_cabin: bool = Field(
-        default=False,
-        description="Whether the passenger has a known cabin."
+        default=False, description="Whether the passenger has a known cabin."
     )
 
     model_config = {

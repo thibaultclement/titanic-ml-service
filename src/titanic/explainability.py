@@ -2,10 +2,8 @@
 
 import joblib
 import pandas as pd
-import numpy as np
-
-from sklearn.inspection import permutation_importance, PartialDependenceDisplay
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 def load_model_bundle(path="models/model.joblib"):
@@ -44,11 +42,13 @@ def compute_permutation_importance(
     )
 
     return (
-        pd.DataFrame({
-            "feature": X.columns,
-            "importance_mean": result.importances_mean,
-            "importance_std": result.importances_std,
-        })
+        pd.DataFrame(
+            {
+                "feature": X.columns,
+                "importance_mean": result.importances_mean,
+                "importance_std": result.importances_std,
+            }
+        )
         .sort_values("importance_mean", ascending=False)
         .reset_index(drop=True)
     )
@@ -90,8 +90,7 @@ def compute_shap_kernel_explainer(pipeline, X_background):
         return pipeline.predict_proba(X)[:, 1]
 
     explainer = shap.KernelExplainer(
-        predict_proba_fn,
-        shap.sample(X_background, min(100, len(X_background)))
+        predict_proba_fn, shap.sample(X_background, min(100, len(X_background)))
     )
 
     return explainer

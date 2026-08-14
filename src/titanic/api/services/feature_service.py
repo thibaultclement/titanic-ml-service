@@ -24,15 +24,9 @@ class FeatureService:
             "HasNickname": 0,
             "AgeETR": data["age"],
             "IsChild": self.is_child(data["age"]),
-            "FarePerPerson_log1p": self.estimate_fare_per_person_log1p(
-                data["pclass"]
-            ),
-            "FamilySurvivalRate": float(
-                model_service.global_survival_rate
-            ),
-            "TicketSurvivalRate": float(
-                model_service.global_survival_rate
-            ),
+            "FarePerPerson_log1p": self.estimate_fare_per_person_log1p(data["pclass"]),
+            "FamilySurvivalRate": float(model_service.global_survival_rate),
+            "TicketSurvivalRate": float(model_service.global_survival_rate),
             "HasCabin": int(data["has_cabin"]),
             "IsAlone": int(data["travel_group_size"] == 1),
         }

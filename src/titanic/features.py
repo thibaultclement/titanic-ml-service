@@ -1,14 +1,16 @@
 # features.py
 
-import pandas as pd
-import numpy as np
 import re
-from titanic.imputations_age import impute_age_iterative_extra_trees
 
+import numpy as np
+import pandas as pd
+
+from titanic.imputations_age import impute_age_iterative_extra_trees
 
 # ---------------------------------------------------------------------
 # Name
 # ---------------------------------------------------------------------
+
 
 def extract_surname(df):
     return df["Name"].map(lambda x: x.split(", ")[0])
@@ -19,7 +21,7 @@ def extract_title(df):
         "Mr": ["Mr", "Dr", "Rev", "Major", "Col", "Capt", "Sir", "Don", "Jonkheer"],
         "Mrs": ["Mrs", "the Countess", "Ms", "Lady", "Mme", "Dona"],
         "Master": ["Master"],
-        "Miss": ["Miss", "Mlle"]
+        "Miss": ["Miss", "Mlle"],
     }
 
     def find_replace_title(title):
@@ -40,6 +42,7 @@ def has_nickname(df):
 # Sex
 # ---------------------------------------------------------------------
 
+
 def sex_dummy(df):
     return (df["Sex"] == "male").astype(int)
 
@@ -47,6 +50,7 @@ def sex_dummy(df):
 # ---------------------------------------------------------------------
 # Age
 # ---------------------------------------------------------------------
+
 
 def is_child(df):
     threshold_child = 7
@@ -77,6 +81,7 @@ def assign_age_decade(df, var):
 # Family
 # ---------------------------------------------------------------------
 
+
 def is_alone(df):
     return (df["SibSp"] + df["Parch"] == 0).astype(int)
 
@@ -92,6 +97,7 @@ def compute_family_size(df):
 # ---------------------------------------------------------------------
 # Ticket
 # ---------------------------------------------------------------------
+
 
 def split_ticket(ticket):
     ticket = str(ticket)
@@ -119,15 +125,18 @@ def extract_ticket_number_class(df):
 # Cabin
 # ---------------------------------------------------------------------
 
+
 def extract_deck(df):
     return df["Cabin"].map(lambda x: x[0] if pd.notnull(x) else np.nan)
 
 
 def extract_cabin_number(df):
     return df["Cabin"].apply(
-        lambda x: int(re.search(r"\d+", x).group(0))
-        if pd.notnull(x) and re.search(r"\d+", x)
-        else np.nan
+        lambda x: (
+            int(re.search(r"\d+", x).group(0))
+            if pd.notnull(x) and re.search(r"\d+", x)
+            else np.nan
+        )
     )
 
 
@@ -145,6 +154,7 @@ def has_cabin(df):
 # Counts
 # ---------------------------------------------------------------------
 
+
 def count_values(df, var):
     return df.groupby(var)[var].transform("count")
 
@@ -152,6 +162,7 @@ def count_values(df, var):
 # ---------------------------------------------------------------------
 # Group
 # ---------------------------------------------------------------------
+
 
 def compute_group_size(df):
     df = df.copy()
@@ -162,41 +173,33 @@ def compute_group_size(df):
     df.loc[df["GroupSize"] == 1, "GroupSize"] = df["FamilySize"]
 
     # Step 2 - same ticket
-    df.loc[
-        (df["GroupSize"] == 1) &
-        (df["TicketValueCounts"] > 1),
-        "GroupSize"
-    ] = df["TicketValueCounts"]
+    df.loc[(df["GroupSize"] == 1) & (df["TicketValueCounts"] > 1), "GroupSize"] = df[
+        "TicketValueCounts"
+    ]
 
     # Step 3 - same cabin
-    df.loc[
-        (df["GroupSize"] == 1) &
-        (df["CabinValueCounts"] > 1),
-        "GroupSize"
-    ] = df["CabinValueCounts"]
+    df.loc[(df["GroupSize"] == 1) & (df["CabinValueCounts"] > 1), "GroupSize"] = df[
+        "CabinValueCounts"
+    ]
 
     # Step 4 - same surname and same fare
     for surname in df["Surname"].dropna().unique():
-        loc = df.loc[
-            (df["GroupSize"] == 1) &
-            (df["Surname"] == surname)
-        ]
+        loc = df.loc[(df["GroupSize"] == 1) & (df["Surname"] == surname)]
 
         if len(loc) > 1 and loc["Fare"].nunique(dropna=True) == 1:
-            df.loc[
-                (df["GroupSize"] == 1) &
-                (df["Surname"] == surname),
-                "GroupSize"
-            ] = len(loc)
+            df.loc[(df["GroupSize"] == 1) & (df["Surname"] == surname), "GroupSize"] = (
+                len(loc)
+            )
 
     # Step 5 - close ticket numbers with same fare
     threshold = 1
 
     for fare in df["Fare"].dropna().unique():
-        loc = df.loc[
-            (df["GroupSize"] == 1) &
-            (df["Fare"] == fare)
-        ].sort_values("TicketNumber").reset_index(drop=True)
+        loc = (
+            df.loc[(df["GroupSize"] == 1) & (df["Fare"] == fare)]
+            .sort_values("TicketNumber")
+            .reset_index(drop=True)
+        )
 
         if len(loc) <= 1:
             continue
@@ -206,12 +209,17 @@ def compute_group_size(df):
 
         while start_index < loc.index[-1]:
             for i in range(start_index, loc.index[-1]):
-                if loc.iloc[i + 1]["TicketNumber"] - loc.iloc[i]["TicketNumber"] <= threshold:
+                if (
+                    loc.iloc[i + 1]["TicketNumber"] - loc.iloc[i]["TicketNumber"]
+                    <= threshold
+                ):
                     count += 1
                 else:
                     if count > 1:
-                        passenger_ids = loc["PassengerId"].iloc[start_index:i + 1]
-                        df.loc[df["PassengerId"].isin(passenger_ids), "GroupSize"] = count
+                        passenger_ids = loc["PassengerId"].iloc[start_index : i + 1]
+                        df.loc[df["PassengerId"].isin(passenger_ids), "GroupSize"] = (
+                            count
+                        )
 
                     count = 1
                     start_index = i + 1
@@ -241,6 +249,7 @@ def assign_group_type(df):
 # Fare
 # ---------------------------------------------------------------------
 
+
 def compute_fare_per_ticket_passenger(df):
     return df["Fare"] / df["TicketValueCounts"]
 
@@ -252,6 +261,7 @@ def compute_fare_per_person(df):
 # ---------------------------------------------------------------------
 # Main feature builder
 # ---------------------------------------------------------------------
+
 
 def build_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
@@ -272,9 +282,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     # Ticket
     df["TicketText"], df["TicketNumber"] = zip(*df["Ticket"].map(split_ticket))
     df["TicketNumber"] = (
-        pd.to_numeric(df["TicketNumber"], errors="coerce")
-        .fillna(-1)
-        .astype(int)
+        pd.to_numeric(df["TicketNumber"], errors="coerce").fillna(-1).astype(int)
     )
     df["TicketNumberClass"] = extract_ticket_number_class(df)
 
@@ -312,14 +320,10 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         "SibSp",
         "Parch",
         "FarePerTicketPassenger_log1p",
-        "Embarked"
+        "Embarked",
     ]
 
-    categorical_features = [
-        "Sex",
-        "Title",
-        "Embarked"
-    ]
+    categorical_features = ["Sex", "Title", "Embarked"]
 
     df["AgeETR"] = impute_age_iterative_extra_trees(
         df=df,
@@ -327,7 +331,7 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         categorical_features=categorical_features,
         age_col="Age",
         random_state=42,
-        max_iter=50
+        max_iter=50,
     )
 
     df["AgeGroup"] = assign_age_group(df, "AgeETR")
