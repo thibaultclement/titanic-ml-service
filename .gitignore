@@ -28,8 +28,7 @@ build/
 *.db
 
 # Modèles entraînés
-*.pkl
-*.joblib
+models/experiments/
 
 # Kaggle submissions
 data/submissions/

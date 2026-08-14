@@ -1,4 +1,4 @@
-.PHONY: install sync build train predict evaluate all test format lint fix clean tree eda
+.PHONY: install sync build train predict evaluate all test format lint fix clean tree eda api
 
 install:
 	uv sync
@@ -41,3 +41,9 @@ tree:
 
 eda:
 	jupyter lab
+
+api:
+	uv run uvicorn src.titanic.api.main:app --reload
+
+app:
+	uv run streamlit run src/titanic/app.py
