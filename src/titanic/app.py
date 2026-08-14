@@ -31,13 +31,24 @@ st.set_page_config(
     layout="centered",
 )
 
+
+# ---------------------------------------------------------------------
+# Header
+# ---------------------------------------------------------------------
+
 st.title("🚢 Titanic Survival Predictor")
-st.write("Simulez un passager du Titanic et estimez sa probabilité de survie.")
+
+st.write(
+    "Imaginez que vous embarquez à bord du Titanic. "
+    "Renseignez votre profil pour estimer vos chances de survie."
+)
+
 
 with st.spinner(
     "Connexion au modèle... Le premier démarrage peut prendre jusqu'à une minute."
 ):
     api_ready = wake_up_api()
+
 
 if api_ready:
     st.success("🟢 Modèle disponible")
@@ -47,42 +58,85 @@ else:
         "Vous pouvez remplir le formulaire et réessayer dans quelques instants."
     )
 
-st.sidebar.header("Profil du passager")
 
-pclass = st.sidebar.selectbox(
-    "Classe",
+# ---------------------------------------------------------------------
+# Passenger form
+# ---------------------------------------------------------------------
+
+st.subheader("Votre profil")
+
+
+pclass = st.selectbox(
+    "Classe de voyage",
     options=[1, 2, 3],
+    format_func=lambda x: {
+        1: "1ère classe",
+        2: "2ème classe",
+        3: "3ème classe",
+    }[x],
     index=2,
 )
 
-title = st.sidebar.selectbox(
-    "Titre",
-    options=["Mr", "Mrs", "Miss", "Master"],
-)
 
-sex = st.sidebar.selectbox(
+sex_fr = st.selectbox(
     "Sexe",
-    options=["male", "female"],
+    options=["Masculin", "Féminin"],
 )
 
-age = st.sidebar.slider(
+sex = {
+    "Masculin": "male",
+    "Féminin": "female",
+}[sex_fr]
+
+
+age = st.number_input(
     "Âge",
     min_value=0,
     max_value=100,
     value=28,
+    step=1,
 )
 
-travel_group_size = st.sidebar.slider(
+
+travel_group_size = st.number_input(
     "Nombre de personnes voyageant ensemble",
     min_value=1,
     max_value=20,
     value=1,
+    step=1,
 )
 
-has_cabin = st.sidebar.checkbox(
-    "Cabine connue",
-    value=False,
-)
+
+# ---------------------------------------------------------------------
+# Derive Title
+# ---------------------------------------------------------------------
+
+if sex == "male":
+    title = "Master" if age < 18 else "Mr"
+
+else:
+    if age < 18:
+        title = "Miss"
+
+    else:
+        female_title = st.selectbox(
+            "Titre",
+            options=["Mlle", "Mme"],
+            help=(
+                "Cette information est utilisée par le modèle "
+                "car le titre était fortement associé à la survie."
+            ),
+        )
+
+        title = {
+            "Mlle": "Miss",
+            "Mme": "Mrs",
+        }[female_title]
+
+
+# Hidden/default model features
+has_cabin = False
+
 
 payload = {
     "pclass": pclass,
@@ -93,15 +147,17 @@ payload = {
     "has_cabin": has_cabin,
 }
 
-st.subheader("Paramètres envoyés à l'API")
-st.json(payload)
 
-if st.button("Prédire la survie", width="stretch"):
+# ---------------------------------------------------------------------
+# Prediction
+# ---------------------------------------------------------------------
+
+if st.button(
+    "Estimer mes chances de survie",
+    width="stretch",
+    type="primary",
+):
     try:
-        # -----------------------------------------------------
-        # Prediction
-        # -----------------------------------------------------
-
         with st.spinner(
             "Calcul de la prédiction... "
             "Le serveur peut mettre quelques secondes à répondre."
@@ -118,25 +174,26 @@ if st.button("Prédire la survie", width="stretch"):
         probability = result["survival_probability"]
         label = result["label"]
 
+        st.divider()
         st.subheader("Résultat")
 
         st.metric(
-            label="Probabilité de survie",
+            label="Probabilité estimée de survie",
             value=f"{probability:.1%}",
         )
 
-        if result["prediction"] == 1:
-            st.success(label)
-        else:
-            st.error(label)
-
         st.progress(probability)
 
-        # -----------------------------------------------------
-        # SHAP explanation
-        # -----------------------------------------------------
+        if result["prediction"] == 1:
+            st.success("Le modèle estime que vous auriez probablement survécu.")
+        else:
+            st.error("Le modèle estime que vous n'auriez probablement pas survécu.")
 
-        with st.spinner("Calcul de l'explication SHAP..."):
+        # -------------------------------------------------------------
+        # SHAP
+        # -------------------------------------------------------------
+
+        with st.spinner("Analyse des facteurs ayant influencé la prédiction..."):
             explain_response = requests.post(
                 f"{API_URL}/explain",
                 json=payload,
@@ -148,7 +205,13 @@ if st.button("Prédire la survie", width="stretch"):
 
         factors = explanation["top_factors"]
 
-        st.subheader("Explication de la prédiction")
+        st.divider()
+        st.subheader("Pourquoi cette prédiction ?")
+
+        st.write(
+            "Le graphique ci-dessous montre les variables qui ont poussé "
+            "le modèle vers une probabilité de survie plus élevée ou plus faible."
+        )
 
         factors_df = pd.DataFrame(factors)
         factors_df["abs_contribution"] = factors_df["contribution"].abs()
@@ -157,17 +220,6 @@ if st.button("Prédire la survie", width="stretch"):
             "abs_contribution",
             ascending=False,
         ).reset_index(drop=True)
-
-        st.dataframe(
-            factors_df[
-                [
-                    "feature",
-                    "contribution",
-                    "direction",
-                ]
-            ],
-            width="stretch",
-        )
 
         feature_values = {
             "Pclass": pclass,
