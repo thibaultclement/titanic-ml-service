@@ -1,11 +1,15 @@
+import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 import shap
 import streamlit as st
 
-API_URL = "http://127.0.0.1:8000"
 
+API_URL = os.getenv(
+    "API_URL",
+    "http://127.0.0.1:8000",
+)
 
 st.set_page_config(
     page_title="Titanic Survival Predictor",
@@ -15,6 +19,11 @@ st.set_page_config(
 
 st.title("🚢 Titanic Survival Predictor")
 st.write("Simulez un passager du Titanic et estimez sa probabilité de survie.")
+
+st.info(
+    "Le service peut mettre quelques secondes à démarrer "
+    "après une période d'inactivité."
+)
 
 st.sidebar.header("Profil du passager")
 
