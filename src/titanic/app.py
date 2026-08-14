@@ -78,10 +78,12 @@ pclass = st.selectbox(
 )
 
 
-sex_fr = st.selectbox(
+sex_fr = st.radio(
     "Sexe",
     options=["Masculin", "Féminin"],
+    horizontal=True,
 )
+
 
 sex = {
     "Masculin": "male",
