@@ -43,7 +43,7 @@ eda:
 	jupyter lab
 
 api:
-	uv run uvicorn src.titanic.api.main:app --reload
+	uv run uvicorn titanic.api.main:app --reload
 
 app:
 	uv run streamlit run src/titanic/app.py

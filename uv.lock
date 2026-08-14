@@ -2008,10 +2008,11 @@ wheels = [
 [[package]]
 name = "titanic-ml-service"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "ipykernel" },
+    { name = "joblib" },
     { name = "matplotlib" },
     { name = "matplotlib-inline" },
     { name = "numpy" },
@@ -2032,6 +2033,7 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.138.0" },
     { name = "ipykernel", specifier = ">=7.2.0" },
+    { name = "joblib", specifier = ">=1.5.3" },
     { name = "matplotlib", specifier = ">=3.10.9" },
     { name = "matplotlib-inline", specifier = ">=0.2.2" },
     { name = "numpy", specifier = ">=2.4.6" },
