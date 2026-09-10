@@ -13,10 +13,6 @@ class PassengerInput(BaseModel):
     travel_group_size: int = Field(
         default=1, ge=1, le=20, description="Number of people travelling together."
     )
-    has_cabin: bool = Field(
-        default=False, description="Whether the passenger has a known cabin."
-    )
-
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -25,7 +21,6 @@ class PassengerInput(BaseModel):
                 "age": 28,
                 "sex": "male",
                 "travel_group_size": 1,
-                "has_cabin": False,
             }
         }
     }
@@ -44,7 +39,6 @@ class WhatIfInput(BaseModel):
                     "age": 28,
                     "sex": "male",
                     "travel_group_size": 1,
-                    "has_cabin": False,
                 },
                 "after": {
                     "pclass": 1,
@@ -52,7 +46,6 @@ class WhatIfInput(BaseModel):
                     "age": 28,
                     "sex": "male",
                     "travel_group_size": 1,
-                    "has_cabin": True,
                 },
             }
         }

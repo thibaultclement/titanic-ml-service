@@ -14,7 +14,8 @@ def model_info():
         "model_name": model.__class__.__name__,
         "model_type": f"{model.__class__.__module__}.{model.__class__.__name__}",
         "version": "1.0.0",
-        "local_kaggle_score": 0.8014,
+        "api_cv_accuracy": 0.8058,
+        "api_cv_accuracy_std": 0.0262,
         "features": model_service.features,
         "n_features": len(model_service.features),
         "endpoints": [
