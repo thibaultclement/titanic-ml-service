@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.titanic.api.services.model_service import model_service
+from titanic.api.services.model_service import model_service
 
 
 class FeatureService:

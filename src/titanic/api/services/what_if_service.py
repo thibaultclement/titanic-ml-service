@@ -1,4 +1,4 @@
-from src.titanic.api.services.prediction_service import prediction_service
+from titanic.api.services.prediction_service import prediction_service
 
 
 class WhatIfService:

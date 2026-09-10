@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from src.titanic.api.schemas.input import PassengerInput
-from src.titanic.api.schemas.output import PredictionOutput
-from src.titanic.api.services.prediction_service import prediction_service
+from titanic.api.schemas.input import PassengerInput
+from titanic.api.schemas.output import PredictionOutput
+from titanic.api.services.prediction_service import prediction_service
 
 router = APIRouter()
 

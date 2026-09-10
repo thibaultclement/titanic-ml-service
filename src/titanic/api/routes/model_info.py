@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.titanic.api.services.model_service import model_service
+from titanic.api.services.model_service import model_service
 
 router = APIRouter()
 

@@ -1,9 +1,9 @@
 import pandas as pd
 import shap
 
-from src.titanic.api.services.feature_service import feature_service
-from src.titanic.api.services.model_service import model_service
-from src.titanic.api.services.prediction_service import prediction_service
+from titanic.api.services.feature_service import feature_service
+from titanic.api.services.model_service import model_service
+from titanic.api.services.prediction_service import prediction_service
 
 
 class ExplainabilityService:

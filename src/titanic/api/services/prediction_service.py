@@ -1,5 +1,5 @@
-from src.titanic.api.services.feature_service import feature_service
-from src.titanic.api.services.model_service import model_service
+from titanic.api.services.feature_service import feature_service
+from titanic.api.services.model_service import model_service
 
 
 class PredictionService:
