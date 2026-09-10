@@ -59,6 +59,49 @@ FEATURE_SETS = {
     + [
         "CabinCount",
     ],
+    "api_minimal": [
+        "Pclass",
+        "SexIsMale",
+        "AgeETR",
+        "IsChild",
+        "IsAlone",
+    ],
+    "api_with_title": [
+        "Pclass",
+        "Title",
+        "SexIsMale",
+        "AgeETR",
+        "IsChild",
+        "IsAlone",
+    ],
+    "api_with_title_and_fare": [
+        "Pclass",
+        "Title",
+        "SexIsMale",
+        "AgeETR",
+        "IsChild",
+        "Fare",
+        "IsAlone",
+    ],
+    "api_with_title_and_cabin": [
+        "Pclass",
+        "Title",
+        "SexIsMale",
+        "AgeETR",
+        "IsChild",
+        "IsAlone",
+        "HasCabin",
+    ],
+    "api_with_title_fare_and_cabin": [
+        "Pclass",
+        "Title",
+        "SexIsMale",
+        "AgeETR",
+        "IsChild",
+        "Fare",
+        "IsAlone",
+        "HasCabin",
+    ],
 }
 
 FINAL_FEATURES = [
