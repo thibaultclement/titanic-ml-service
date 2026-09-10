@@ -136,17 +136,12 @@ else:
         }[female_title]
 
 
-# Hidden/default model features
-has_cabin = False
-
-
 payload = {
     "pclass": pclass,
     "title": title,
     "age": age,
     "sex": sex,
     "travel_group_size": travel_group_size,
-    "has_cabin": has_cabin,
 }
 
 
@@ -226,13 +221,9 @@ if st.button(
         feature_values = {
             "Pclass": pclass,
             "Title": title,
-            "HasNickname": 0,
+            "SexIsMale": int(sex == "male"),
             "AgeETR": age,
             "IsChild": int(age < 7),
-            "FarePerPerson_log1p": None,
-            "FamilySurvivalRate": None,
-            "TicketSurvivalRate": None,
-            "HasCabin": int(has_cabin),
             "IsAlone": int(travel_group_size == 1),
         }
 
