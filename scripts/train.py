@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import joblib
@@ -11,20 +12,32 @@ from titanic.preprocessing import (
     build_preprocessor,
     get_train_test_data,
 )
-from titanic.selection import select_model_features
+from titanic.selection import select_model_features, select_model_features_set
+
+API_FEATURE_SET = "api_with_title"
+KAGGLE_ARTIFACT_PATH = Path("models/model.joblib")
+API_ARTIFACT_PATH = Path("models/api_model.joblib")
 
 
-def main():
+def select_training_features(df, profile):
+    if profile == "api":
+        return select_model_features_set(
+            df,
+            feature_set=API_FEATURE_SET,
+            include_target=True,
+        )
+
+    return select_model_features(df, include_target=True)
+
+
+def main(profile="kaggle"):
     # ---------------------------------------------------------
     # Load data
     # ---------------------------------------------------------
 
     df = load_processed_data()
 
-    df = select_model_features(
-        df,
-        include_target=True,
-    )
+    df = select_training_features(df, profile)
 
     features = [col for col in df.columns if col != "Survived"]
 
@@ -37,18 +50,6 @@ def main():
         features=features,
         target="Survived",
     )
-
-    # ---------------------------------------------------------
-    # Production metadata
-    # ---------------------------------------------------------
-
-    global_survival_rate = float(y_train.mean())
-
-    fare_per_person_by_pclass = (
-        X_train.groupby("Pclass")["FarePerPerson_log1p"].median().to_dict()
-    )
-
-    global_fare_per_person_log1p = float(X_train["FarePerPerson_log1p"].median())
 
     shap_background = (
         X_train[features]
@@ -89,27 +90,39 @@ def main():
     # Save production artifact
     # ---------------------------------------------------------
 
-    Path("models").mkdir(exist_ok=True)
+    artifact = {
+        "pipeline": pipeline,
+        "model_name": model.__class__.__name__,
+        "features": features,
+        "shap_background": shap_background,
+    }
 
-    joblib.dump(
-        {
-            "pipeline": pipeline,
-            "model_name": model.__class__.__name__,
-            "features": features,
-            # Reference values used by the API
-            "global_survival_rate": global_survival_rate,
-            "fare_per_person_by_pclass": fare_per_person_by_pclass,
-            "global_fare_per_person_log1p": global_fare_per_person_log1p,
-            # Reference sample used by SHAP
-            "shap_background": shap_background,
-        },
-        "models/model.joblib",
-    )
+    if profile == "kaggle":
+        artifact.update(
+            {
+                "global_survival_rate": float(y_train.mean()),
+                "fare_per_person_by_pclass": (
+                    X_train.groupby("Pclass")["FarePerPerson_log1p"]
+                    .median()
+                    .to_dict()
+                ),
+                "global_fare_per_person_log1p": float(
+                    X_train["FarePerPerson_log1p"].median()
+                ),
+            }
+        )
 
-    print(f"Final model trained: {model.__class__.__name__}")
+    artifact_path = API_ARTIFACT_PATH if profile == "api" else KAGGLE_ARTIFACT_PATH
+    artifact_path.parent.mkdir(exist_ok=True)
+    joblib.dump(artifact, artifact_path)
+
+    print(f"{profile.capitalize()} model trained: {model.__class__.__name__}")
     print(f"Features used: {features}")
-    print("Model saved to models/model.joblib")
+    print(f"Model saved to {artifact_path}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--profile", choices=["api", "kaggle"], default="kaggle")
+    args = parser.parse_args()
+    main(profile=args.profile)
